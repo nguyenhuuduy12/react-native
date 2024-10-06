@@ -1,0 +1,113 @@
+import { Button, FlatList, Keyboard, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
+import { NavigationContainer, useNavigation, useRoute } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import 'react-native-gesture-handler';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from "@expo/vector-icons/Ionicons";
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+
+function HomeScreen() {
+  
+  const navigation: any = useNavigation()
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Home Screen</Text>
+      <Button 
+      onPress={()=>navigation.navigate('Details')}
+      title='goto deltail'/>
+      <View style={{marginTop:10}}>
+      <Button 
+      onPress={()=>navigation.navigate("Details", {userId: 1, name: "hai huynh"})}
+      title='goto to user = 1'/>
+      </View>
+      <View style={{marginTop:10}}>
+      <Button 
+      onPress={()=>navigation.navigate("Details", {userId: 2, name: "tan hai"})}
+      title='goto to user = 2'/>
+      </View>
+    </View>
+  );
+}
+function DetailsScreen() {
+  const route: any = useRoute();
+  console.log(">>>check route:", route)
+  const navigation: any = useNavigation()
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Details Screen</Text>
+      <Text>user id = {route?.params?.userId}</Text>
+      <View style={{marginTop:10}}>
+      <Button 
+      onPress={()=>navigation.goBack()}
+      title='goto Home'/>
+      </View>
+    </View>
+  );
+}
+const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+    {/* <Stack.Navigator
+    screenOptions={{
+      title: 'My home',
+      headerStyle: {
+        backgroundColor: '#f4511e',
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+    }}
+    >
+      <Stack.Screen name="Home" component={HomeScreen} 
+      />
+      <Stack.Screen 
+      name="Details" 
+      component={DetailsScreen} 
+      options={({ route }: {route: any}) => ({ headerTitle: `detail ${route?.params?.userId ?? ""}`
+      })}
+      />
+    </Stack.Navigator> */}
+    {/* <Drawer.Navigator>
+      <Drawer.Screen 
+      options={{
+        drawerLabel: " Trang chu",
+        headerTitle: "Trang chu "
+
+      }}
+      name="Feed" 
+      component={HomeScreen} />
+      <Drawer.Screen name="Article" component={DetailsScreen} />
+    </Drawer.Navigator> */}
+    <Tab.Navigator
+    screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName;
+
+        if (route.name === 'Home') {
+          iconName = focused
+            ? 'home'
+            : 'home-outline';
+        } else if (route.name === 'Settings') {
+          iconName = focused ? 'aperture' : 'aperture-outline';
+        }
+
+        // You can return any component that you like here!
+        return <Ionicons name={iconName as any} size={size} color={color} />;
+      },
+      tabBarActiveTintColor: 'tomato',
+      tabBarInactiveTintColor: 'gray',
+    })}
+    >
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Settings" component={DetailsScreen} />
+      </Tab.Navigator>
+  </NavigationContainer>
+  );
+}
+

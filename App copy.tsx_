@@ -1,0 +1,57 @@
+import { useState } from 'react';
+import { Button, FlatList, Keyboard, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
+import InputTOdo from './components/todo/input.todo';
+import ListTodo from './components/todo/list.todo'
+import FlexBox from './components/todo/flexbox.todo';
+import { NavigationContainer } from '@react-navigation/native';
+
+
+export default function App() {
+  const [todoList, setTodoList] = useState<ITodo[]>([])
+  const randomNumber = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  const addTodo = (title: string) => {
+    const todo = { id: randomNumber(1, 1000), title: title }
+    setTodoList([...todoList, todo])
+  }
+  const deleteTodo = (id: number) => {
+    const newTodo = todoList.filter(todo => todo.id != id);
+    setTodoList(newTodo)
+
+  }
+  return (
+    // <FlexBox></FlexBox>
+    <TouchableWithoutFeedback onPress={() => {
+      Keyboard.dismiss()
+    }}>
+      <View style={styles.container}>
+        <InputTOdo addTodo={addTodo} />
+        <ListTodo todoList={todoList} deleteTodo={deleteTodo} />
+        {/* <ScrollView style={{ marginTop: 20, borderColor: "red", borderWidth: 1 }}>
+        {todoList.map((todo, index) => {
+          return (
+            <Text key={todo.id} style={styles.todo} >
+              {todo.title}
+            </Text>
+          )
+        })
+        }
+      </ScrollView> */}
+      </View >
+    </TouchableWithoutFeedback>
+  );
+  122313
+}
+
+const styles = StyleSheet.create({
+
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    fontSize: 60, color: "red",
+    paddingTop: 20,
+    paddingHorizontal: 20,
+    marginTop: 50,
+  },
+});
